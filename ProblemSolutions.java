@@ -1,6 +1,6 @@
 /******************************************************************
  *
- *   ADD YOUR NAME / SECTION NUMBER HERE
+ *   Jung Lee / 001
  *
  *   This java file contains the problem solutions of canFinish and
  *   numGroups methods.
@@ -82,8 +82,40 @@ class ProblemSolutions {
                                         prerequisites); 
 
         // ADD YOUR CODE HERE - ADD YOUR NAME / SECTION AT TOP OF FILE
-        return false;
+        int[] inDegree = new int[numNodes];
 
+        for (int[] edge : prerequisites) {
+            // Increment in-degree for the destination node
+            inDegree[edge[1]]++;
+        }
+
+        //Initialize queue with all nodes having zero in-degree
+        Queue<Integer> queue = new LinkedList<>();
+        for (int i = 0; i < numNodes; i++) {
+            if (inDegree[i] == 0) {
+                queue.offer(i);
+            }
+        }
+
+        int processedCount = 0;
+
+        //while loop to process nodes in top order
+        while (!queue.isEmpty()) {
+            int current = queue.poll();
+            processedCount++;
+
+            // Decrease in-degree of all neighbors
+            for (int neighbor : adj[current]) {
+                inDegree[neighbor]--;
+                if (inDegree[neighbor] == 0) {
+                    // Add nodes with no remaining prerequisites
+                    queue.offer(neighbor);
+                }
+            }
+        }
+
+        //If all nodes are processed, return true; otherwise, false
+        return processedCount == numNodes;
     }
 
 
@@ -192,7 +224,43 @@ class ProblemSolutions {
 
         // YOUR CODE GOES HERE - you can add helper methods, you do not need
         // to put all code in this method.
-        return -1;
+
+        //Initialize array visited to keep track of which nodes have been visted by the DFS traversal
+        boolean[] visited = new boolean[numNodes];
+
+        // Initialize variable groups to track the number of connected groups
+        int groups = 0;
+
+        // Traverse each node in the graph
+        for (i = 0; i < numNodes; i++) {
+            // If the node has not been visited
+            if (!visited[i]) {
+                groups++;
+
+                // Perform DFS to mark all nodes in this group as visited
+                dfs(i, graph, visited);
+            }
+        }
+
+        return groups;
     }
+
+    // Helper method for Depth-First Search (DFS) traversal
+    private void dfs(int node, Map<Integer, List<Integer>> graph, boolean[] visited) {
+        // Mark the current node as visited
+        visited[node] = true;
+        // Get the connected nodes of the current node
+        List<Integer> neighbors = graph.getOrDefault(node, new ArrayList<>());
+
+        // Explore each connected node (neighbor)
+        for (int neighbor : neighbors) {
+
+            // If the node hasn't been visited yet, explore it recursively
+            if (!visited[neighbor]) {
+                dfs(neighbor, graph, visited);
+            }
+        }
+    }
+
 
 }

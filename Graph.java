@@ -1,6 +1,6 @@
 /******************************************************************
  *
- *   YOUR NAME / SECTION NUMBER
+ *   Jung Lee / 001
  *
  *   Note, additional comments provided throughout this source code
  *   is for educational purposes
@@ -105,6 +105,28 @@ public class Graph {
   public int findRoot() {
 
     // ADD YOUR CODE HERE - DO NOT FORGET TO ADD YOUR NAME/SECTION AT TOP OF FILE
-    return -1;
+    // Array to track amount of incoming edge counts for each vertex
+    int[] incomingEdges = new int[numVertices];
+    
+    //For loop to count the edges
+    for (int src  = 0; src < numVertices; src++) {
+
+      for (int dest : adjListArr[src]) {
+        incomingEdges[dest]++;
+      }
+    }
+
+    int root = -1;
+
+    for (int i = 0; i < numVertices; i++) {
+      // Check if vertex has no incoming edges
+      if (incomingEdges[i] == 0) {
+        root = (root == -1) ? i : -2;
+
+      }
+    }
+
+    // Return root's value if valid, otherwise -1
+    return (root >= 0) ? vertexValues.get(root) : -1;
   } 
 }
